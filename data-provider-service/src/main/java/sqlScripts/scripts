@@ -1,0 +1,47 @@
+
+CREATE TABLE `department` (
+  `id` int NOT null auto_increment,
+  `name` varchar(40) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+
+);
+
+CREATE TABLE `employee` (
+  `id` int NOT null auto_increment,
+  `name` varchar(40) DEFAULT NULL,
+  `contact` varchar(40) DEFAULT NULL,
+  `email` varchar(40) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  `department_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (department_id) REFERENCES department(id)
+
+) ;
+insert into department(name,enabled) values('IT',1),('CRM',1),('HR',1),('ADMIN',1),('Operations',1)
+
+
+INSERT INTO springdata.employee
+( name, contact, email, enabled,department_id)
+VALUES( 'Arsalan', '03032637998', 'Arsalan.ahmed@avanzasolutions.com', 1,1),
+( 'Hamza', '04562637998', 'Hamza.siddiqui@avanzasolutions.com', 1,2),
+( 'Manzar', '03789637998', 'Manzar.khan@avanzasolutions.com', 1,5),
+( 'Taimoor', '03454554598', 'Taimoor.shah@avanzasolutions.com', 1,4);
+select * from employee
+
+
+
+
+
+
+CREATE TABLE `Token` (
+  `id` int NOT null auto_increment,
+  `token` varchar(400) DEFAULT NULL,
+  `token_type` varchar(40) DEFAULT NULL,
+  `revoked` tinyint(1) DEFAULT false,
+    `expired` tinyint(1) DEFAULT false,
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (user_id) REFERENCES employee(id)
+
+) ;
