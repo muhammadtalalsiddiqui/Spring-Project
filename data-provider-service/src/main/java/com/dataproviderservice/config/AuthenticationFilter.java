@@ -49,7 +49,10 @@ public class AuthenticationFilter extends OncePerRequestFilter  {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // check if user username found in token and check security context is null
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails) ) {
+            var isTokenValid = tokenRepository.findByToken(jwt)
+                    .map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
+            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
                 try{
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,null, userDetails.getAuthorities()

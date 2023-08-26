@@ -1,10 +1,13 @@
 package com.dataproviderservice.config;
 
+import com.dataproviderservice.Entity.Employee;
+import com.dataproviderservice.Repository.EmployeeRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
 
     UserDetails userDetails;
+    private final EmployeeRepository employeeRepository;
     private static final String SECURITY_KEY ="emTTPHMuoK0eBWQpIR9sow9NnWq8wWPUt3nBP0+bDT1GVUf39VxJOXcmDsMY6/F8QsjuNUW+9+7heTBv7pK/4m4Hq1hB/AG1LEUnc4jP85RQsH83CUlBmiFscFcljkSEgkeMSD7AxSu1WBq0LE97JMSAVEVBZ0MM/lAdHn+rU5RKwt4SghMGZt7Mlxz0EYUqEGaKiHyKiOKIps1WEiTCwq+Q3mfwPl9VrjdYr5mA28UvPJbvEAlMK56wu3oAlC4FVMYRTIRr4eIf5MCp7tE9dEmR+iOrdilawMhU+87Lljh4rGpOA627AdUim1oLm/ki6WwBlj5Vu6l4gGKZhSITFP40khnIXlVPnrCm9P2bfYw=" ;
 
     public String extractUserName(String token)
@@ -53,14 +58,22 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails)
     {
-        return generateToken(new HashMap<>(),userDetails);
+        Map<String,Object>claims=new HashMap<>();
+      Employee e= employeeRepository.findByEmailAddress(userDetails.getUsername());
+        claims.put("Full name",e.getName());
+        claims.put("Contact",e.getContact());
+        claims.put("Department",e.getDepartment().getName());
+
+
+        return generateToken(claims,userDetails);
+
 
     }
     public String generateToken(Map<String,Object>extractClaims,UserDetails userDetails)
     {
         return Jwts.builder()
                 .setClaims(extractClaims)
-                .setExpiration(new Date(System.currentTimeMillis()*1000 *3*60))
+                .setExpiration(new Date(System.currentTimeMillis()*900000))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setSubject(userDetails.getUsername())
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
