@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+
+# Configuring Routes
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+
+        - id: data-provider-service
+          uri: lb://data-provider-service
+          predicates:
+            - Path=/data-provider/**
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE

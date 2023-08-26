@@ -1,0 +1,27 @@
+server:
+  port: 8085
+
+
+spring:
+  application:
+    name: data-provider-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/springData
+    username: root
+    password: talal12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+eureka:
+  instance:
+    hostname: localhost
+
+
+  cors:
+    allowed-origins:
+      - http://gateway-service-domain:8080
+    allowed-methods: GET, POST, PUT, DELETE
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
