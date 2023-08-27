@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
 
+
     @Override
     public AuthResponseDTO login(AuthRequestDTO authRequestDTO) {
         try{
@@ -38,11 +40,18 @@ public class AuthServiceImpl implements AuthService {
             var user=employeeRepository.findByEmailAddress(authRequestDTO.getUsername());
             if(Objects.nonNull(user))
             {
-                var jwtToken=jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, jwtToken);
-                AuthResponseDTO authResponseDTO=new AuthResponseDTO(jwtToken);
-                return  authResponseDTO;
+                BCryptPasswordEncoder encoded = new BCryptPasswordEncoder();
+
+                boolean matches = encoded.matches(authRequestDTO.getPassword(), user.getPassword());
+                if(matches)
+                {
+                    var jwtToken=jwtService.generateToken(user);
+                    revokeAllUserTokens(user);
+                    saveUserToken(user, jwtToken);
+                    AuthResponseDTO authResponseDTO=new AuthResponseDTO(jwtToken);
+                    return  authResponseDTO;
+                }
+
             }
             return null;
         }
