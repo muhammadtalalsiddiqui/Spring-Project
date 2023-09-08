@@ -31,7 +31,12 @@ public class JwtService {
     {
       return   extractClaims(token,Claims::getSubject);
     }
-    private Claims extractAllClaims(String token)
+    public String extractFullName(String token)
+    {
+        Claims c=   extractAllClaims(token);
+      return   String.valueOf(c.get("Full name"));
+    }
+    public Claims extractAllClaims(String token)
     {
         try {
             return Jwts
@@ -77,7 +82,7 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setSubject(userDetails.getUsername())
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-
+                
                 .compact(); //compact method generate string to9ken
     }
 

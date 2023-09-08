@@ -62,7 +62,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 Employee employee=new Employee(employeeRequestDTO,passwordEncoder.encode(employeeRequestDTO.getPassword()),department,list);
                 employee=  employeeRepository.save(employee);
                 var jwtToken=jwtService.generateToken(employee);
-                AuthResponseDTO authResponseDTO=new AuthResponseDTO(jwtToken);
+                AuthResponseDTO authResponseDTO=new AuthResponseDTO();
+                authResponseDTO.setToken(jwtToken);
                 return  authResponseDTO;
 
             }

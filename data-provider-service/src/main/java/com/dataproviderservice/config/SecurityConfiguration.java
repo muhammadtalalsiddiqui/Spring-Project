@@ -31,8 +31,12 @@ public class SecurityConfiguration {
                            .requestMatchers("/auth/token")
                         .permitAll().requestMatchers("/employee/register")
                         .permitAll()
+                        .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/auth/logout")
+                        .permitAll()
                         .anyRequest().authenticated()
-                )
+
+                ).logout(logout->logout.logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
