@@ -45,7 +45,8 @@ public class AuthenticationFilter extends OncePerRequestFilter  {
             filterChain.doFilter(request, response);
             return; }
         jwt = authHeader.substring(7);  //Extract token after 7 key word of "Bearer "
-        userEmail = jwtService.extractUserName(jwt);   //Extract username from token
+        userEmail = jwtService.extractUserName(jwt);
+        String fullname =jwtService.extractFullName(jwt);   //Extract username from token
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // check if user username found in token and check security context is null
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);

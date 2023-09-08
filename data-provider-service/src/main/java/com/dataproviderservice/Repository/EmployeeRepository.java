@@ -9,6 +9,8 @@ import java.util.List;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     List<Employee> getAllByEnabledTrue();
     Employee findByEmailAddress(String email);
+    Employee findByEmailAddressOrName(String email, String name);
+
 
 
 

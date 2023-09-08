@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,8 @@ public class AuthController{
         authService.refreshToken(request, response);
     }
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request,HttpServletResponse response) throws IOException {
-        authService.logout(request, response);
+    public String logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
+      return   authService.logout(request, response,authentication);
     }
 
 }
